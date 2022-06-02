@@ -1,47 +1,21 @@
-// import "./App.css";
-// import * as React from "react";
+import React from 'react'
+import Brightness3Icon from "@mui/icons-material/Brightness3";
 
-// import Card from "@mui/material/Card";
-// import CardContent from "@mui/material/CardContent";
-// import CardMedia from "@mui/material/CardMedia";
-// import { CardActionArea, CssBaseline } from "@mui/material";
-// import Grid from "@mui/material/Grid";
+const Navbar = ({style,onClick}) => {
+  return (
+    <div
+    className="navbar"
+   
+    style={style}
+  >
+    <div>
+      <h4>What is in the world ?</h4>
+    </div>
+    <div style={{ alignItems: "center", display: "flex" }}>
+      <Brightness3Icon onClick={onClick} />
+      <h4> DarkMode</h4>
+    </div>
+  </div>  )
+}
 
-// function App(props) {
-//   return (
-//     <Grid container spacing={2}>
-//       <Grid container spacing={2}  className="navbar">
-//         <Grid item xs={8} sm={8} md={10}>
-//           <Typography variant="h6" component="div">
-//             Where in the world?
-//           </Typography>
-//         </Grid>
-//         <Grid item xs={4} sm={4} md={2}>
-//           <Typography variant="h6" component="div">
-//             button
-//           </Typography>
-//         </Grid>
-//       </Grid>
-// <CssBaseline/>
-//       <Grid
-//         container
-//         spacing={2}
-//         style={{ backgroundColor: "#Fafafa"}}
-//       >
-//         <Grid item xs={12} sm={8} md={10}>
-          
-//         </Grid>
-//         <Grid item xs={12} sm={4} md={2}>
-//           <select className="drop">
-//             <option>Filter by region</option>
-//             <option>text</option>
-//             <option>text</option>
-//           </select>
-//         </Grid>
-       
-//       </Grid>
-//     </Grid>
-//   );
-// }
-
-// export default App;
+export default Navbar

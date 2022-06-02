@@ -1,25 +1,26 @@
 import "./App.css";
 import { useState, useEffect, React } from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import { CardActionArea } from "@mui/material";
-import Grid from "@mui/material/Grid";
-import Brightness3Icon from "@mui/icons-material/Brightness3";
-import Typography from "@mui/material/Typography";
 
-const Region = ["Europe", "Asia", "Africa", "Oceania", "America"];
+import Grid from "@mui/material/Grid";
+import SelectedCard from "./SelectedCard";
+import Navbar from "./Navbar";
+import Inputs from "./inputs";
+import CardComponent from "./CardComponent";
+
 function App() {
   const [selectedRegion, setSelectedRegion] = useState("");
   const [Data, setData] = useState([]);
   const [countryName, setCountryName] = useState("");
   const [background, setBackground] = useState("dark");
-  const [screenChange, setScreenChange] = useState("");
-   const handleScreenChange = (i) => {
-    console.log("qwswqeq", i);
-    setScreenChange(i);
-   
+  const [page, setPage] = useState(2);
+const [selectedCountry,setSelectedCountry] = useState(null);
+  // const selectedCountry = Data.find((value) => value.countryName === selected)
+ 
+  const onSelectCountry= (item) => {
+setSelectedCountry(item)
   };
+  console.log(selectedCountry)
+
   const handleThemeChange = () => {
     if (background === "light") {
       setBackground("dark");
@@ -66,7 +67,9 @@ function App() {
 
     setData(data);
   }
-  console.log(Data);
+  console.log(Data.slice(50*(page-1),50*page));
+
+  console.log(Data.slice(50,100));
   useEffect(() => {
     if (countryName) {
       getCountriesByName(countryName);
@@ -74,151 +77,69 @@ function App() {
   }, [countryName]);
 
   return (
-    <div
+    <Grid
+      container
+      spacing={0}
       className="container"
       style={{
         backgroundColor: background === "light" ? "rgb(33,46,45)" : "#FAFAFA",
         color: background === "light" ? "Black" : "White",
       }}
     >
-      <div
-        className="navbar"
+      <Navbar
+        onClick={handleThemeChange}
         style={{
           backgroundColor: background === "light" ? "rgb(33,46,45)" : "white",
           color: background === "light" ? "white" : "black",
         }}
-      >
-        <div>
-          <h4>What is in the world ?</h4>
-        </div>
-        <div style={{ alignItems: "center", display: "flex" }}>
-          <Brightness3Icon onClick={handleThemeChange} />
-          <h4> DarkMode</h4>
-        </div>
-      </div>
-      {screenChange === "" && (
-        <div className="form">
-          <div>
-            <input
-              placeholder="Search for a country"
-              type="text"
-              className="input"
-              onChange={handleChange}
-              value={countryName}
-              name="searchInput"
-              style={{
-                backgroundColor:
-                  background === "light" ? "rgb(33,46,45)" : "white",
-                color: background === "light" ? "white" : "black",
-              }}
-            />{" "}
-          </div>
-          <div>
-            <select
-              className="drop"
-              type="text"
-              name="selectInput"
-              value={selectedRegion}
-              onChange={handleChanges}
-              style={{
-                backgroundColor:
-                  background === "light" ? "rgb(33,46,45)" : "white",
-                color: background === "light" ? "white" : "black",
-              }}
-            >
-              <option value="">Filter by region</option>
-              {Region.map((item, i) => (
-                <option value={item} key={i}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      )}
-      {screenChange === "" && (
-        <Grid container spacing={2} style={{ padding: "30px" }}>
-          {Data.map((item) => (
-            <Grid item xs={12} sm={4} md={3} key={item.name.common}>
-              <Card
-                onClick={() => handleScreenChange("cardProfile")}
-                sx={{ maxWidth: 250 }}
-                style={{
-                  backgroundColor:
-                    background === "light" ? "rgb(33,46,45)" : "white",
-                  color: background === "light" ? "white" : "black",
-                }}
-              >
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={item.flags.svg}
-                    alt="green iguana"
-                  />
-                  <CardContent
-                    style={{
-                      backgroundColor:
-                        background === "light" ? "rgb(33,46,45)" : "white",
-                      color: background === "light" ? "white" : "black",
-                    }}
-                  >
-                    <Typography gutterBottom variant="h7">
-                      Name: {item.name.common}
-                    </Typography>
-                    <Typography variant="body2">
-                      Population:{item.population}
-                    </Typography>
-                    <Typography variant="body2">
-                      Region: {item.region}
-                    </Typography>{" "}
-                    <Typography variant="body2">
-                      Capital:{item.capital}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-          ))}
+      />
+
+      {!selectedCountry  && (
+        <Grid item xs={12} md={12} sx={{paddingLeft:"5rem",paddingRight:"5rem"}}>
+           <Inputs
+           onChange1={handleChange}
+           onChange2={handleChanges}
+           value1={countryName}
+           value2={selectedRegion}
+          style={{
+            backgroundColor: background === "light" ? "rgb(33,46,45)" : "white",
+            color: background === "light" ? "white" : "black",
+          }}
+          className="form"
+        />
+              <Grid container spacing={2} >
+              {Data.slice(50*(page-1),50*page).map((item) => (
+                      <Grid item xs={12} sm={6} md={3} key={item.name.common}>
+                        <CardComponent item={item} background={background} onSelect={onSelectCountry}/>
+ </Grid> 
+    ))}
+
+              </Grid>
+              {/* <div className="w-full flex justify-around">
+         {
+          Data.map((pageNum, index) => (
+             <span key={index} className={pageNum === this.state.currentPage ? "cursor-pointer flex items-center justify-center w-12 h-12 border-2 rounded-full bg-blue-500 text-white" : "cursor-pointer flex items-center justify-center w-12 h-12 border-2 rounded-full"} onClick={() => {setPage(pageNum)}}>
+               {pageNum}
+             </span>
+           ))
+         }
+       </div> */}
         </Grid>
+        
+       
       )}
 
-      {screenChange === "cardProfile" && (
-        <Grid container spacing={0} style={{ color: "red",marginTop:"8rem" }} >
-          <Grid item xs={12} sm={6} md={4}>
-            <Card
-              sx={{ maxWidth: 250 }}
-              style={{
-                backgroundColor:
-                  background === "light" ? "rgb(33,46,45)" : "white",
-                color: background === "light" ? "white" : "black",
-              }}
-            >
-              <CardMedia
-                component="img"
-                height="140"
-                // image={item.flags.svg}
-                alt="green iguana"
-              />
-            </Card>
-          </Grid>
 
-          <Grid item xs={12} sm={6} md={8}>
-          <Grid container spacing={0} style={{ color: "red" }}>
-          <Grid item xs={12} sm={12} md={12} style={{ color: "red",  }}>
-            bat{" "}
-          </Grid>
-          <Grid item xs={12} sm={12} md={6}>
-            bat{" "}
-          </Grid><Grid item xs={12} sm={12} md={6}>
-            bat{" "}
-          </Grid>
-          </Grid>
-          </Grid>
-
-        </Grid>
+      {selectedCountry && (
+        <SelectedCard
+        // image={item.flag.svg}
+        selectedCountry={selectedCountry}
+        background={background}
+         
+        />
       )}
-    </div>
+          </Grid>
+ 
   );
 }
 
